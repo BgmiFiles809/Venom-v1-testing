@@ -1,0 +1,31 @@
+name: Telegram Bot Runner
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Runs every 5 minutes
+  push:
+    branches: [ master ] # Runs on every push to the master branch
+
+jobs:
+  run_bot:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+    - name: Build Docker Image
+      uses: docker/build-push-action@v2
+      with:
+        context: . # Your Dockerfile is in the root directory
+        push: true
+        tags: my-telegram-bot:latest
+    - name: Deploy to Cloud Platform
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Run the bot
+      uses: docker/run-action@v1
+      with:
+        image: my-telegram-bot:latest
+        command: m.py # Your bot script
+        ports: '80:80'  # Expose the bot's port
