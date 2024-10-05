@@ -7,152 +7,8 @@ import os
 
 from keep_alive import keep_alive
 keep_alive()
-import telebot
-from threading import timer
-
-command_usage = {}
-custom_commands = {}
-user_roles = {}
-admin_auth_tokens = {}
-
-# Function to record command usage
-def record_command_usage(command):
-    if command in command_usage:
-        command_usage[command] += 1
-    else:
-        command_usage[command] = 1
-
-# Feedback feature
-@bot.message_handler(commands=['feedback'])
-def handle_feedback(message):
-    user_id = str(message.chat.id)
-    feedback = message.text[9:].strip()  # Get the feedback after the command
-    if feedback:
-        with open("feedback.txt", "a") as file:
-            file.write(f"UserID: {user_id} | Feedback: {feedback}\n")
-        response = "Thank you for your feedback! 🙏"
-    else:
-        response = "Please provide your feedback after the command."
-    bot.reply_to(message, response)
-
-# BGMI command
-@bot.message_handler(commands=['bgmi'])
-def handle_bgmi(message):
-    record_command_usage('/bgmi')
-    # Your existing code for bgmi command
-    response = "This is the BGMI command response."
-    bot.reply_to(message, response)
-
-# Scheduled commands feature
-def schedule_command(user_id, command, delay):
-    Timer(delay, execute_scheduled_command, [user_id, command]).start()
-
-def execute_scheduled_command(user_id, command):
-    bot.send_message(user_id, f"Scheduled command executed: {command}")
-
-@bot.message_handler(commands=['schedule'])
-def schedule_command_handler(message):
-    user_id = str(message.chat.id)
-    command = message.text.split()
-    if len(command) == 3:
-        try:
-            delay = int(command[2])
-            schedule_command(user_id, command[1], delay)
-            response = f"Command '{command[1]}' scheduled to run in {delay} seconds."
-        except ValueError:
-            response = "Please provide a valid delay in seconds."
-    else:
-        response = "Usage: /schedule <command> <delay_in_seconds>"
-    bot.reply_to(message, response)
-
-# Admin authentication feature
-@bot.message_handler(commands=['auth'])
-def authenticate_admin(message):
-    user_id = str(message.chat.id)
-    token = message.text.split()[1] if len(message.text.split()) > 1 else None
-    if token == "your_secret_token":  # Replace with a secure token
-        admin_auth_tokens[user_id] = True
-        response = "You are now authenticated as admin."
-    else:
-        response = "Invalid token. Access denied."
-    bot.reply_to(message, response)
-
-# Custom commands feature
-@bot.message_handler(commands=['addcommand'])
-def add_custom_command(message):
-    user_id = str(message.chat.id)
-    if user_id in admin_id:
-        command_parts = message.text.split(maxsplit=2)
-        if len(command_parts) == 3:
-            command_name = command_parts[1]
-            response_text = command_parts[2]
-            custom_commands[command_name] = response_text
-            response = f"Custom command /{command_name} added successfully!"
-        else:
-            response = "Usage: /addcommand <command_name> <response_text>"
-    else:
-        response = "Only admins can add custom commands."
-    bot.reply_to(message, response)
-
-@bot.message_handler(commands=['custom'])
-def handle_custom_commands(message):
-    command_name = message.text.split()[1]
-    if command_name in custom_commands:
-        bot.reply_to(message, custom_commands[command_name])
-    else:
-        bot.reply_to(message, "Custom command not found.")
-
-# Usage statistics feature
-@bot.message_handler(commands=['usage'])
-def show_usage_stats(message):
-    user_id = str(message.chat.id)
-    if user_id in admin_id:
-        if command_usage:
-            response = "Command Usage Statistics:\n" + "\n".join([f"{cmd}: {count}" for cmd, count in command_usage.items()])
-        else:
-            response = "No commands have been used yet."
-    else:
-        response = "Only admins can access usage statistics."
-    bot.reply_to(message, response)
-
-# Help command with dynamic content
-@bot.message_handler(commands=['help'])
-def show_help(message):
-    help_text = "🤖 Available commands:\n"
-    help_text += "/bgmi: This is the BGMI command response.\n"  # Existing command
-    for command in custom_commands:
-        help_text += f"/{command}: {custom_commands[command]}\n"
-    bot.reply_to(message, help_text)
-
-# Role management feature
-def set_user_role(user_id, role):
-    user_roles[user_id] = role
-
-@bot.message_handler(commands=['setrole'])
-def set_role_command(message):
-    user_id = str(message.chat.id)
-    if user_id in admin_id:
-        command = message.text.split()
-        if len(command) == 3:
-            target_user = command[1]
-            new_role = command[2]
-            set_user_role(target_user, new_role)
-            response = f"User {target_user} role set to {new_role}."
-        else:
-            response = "Usage: /setrole <user_id> <role>"
-    else:
-        response = "Only admins can set user roles."
-    bot.reply_to(message, response)
-
-@bot.message_handler(commands=['myrole'])
-def my_role(message):
-    user_id = str(message.chat.id)
-    role = user_roles.get(user_id, "User")
-    bot.reply_to(message, f"Your role is: {role}")
-
-# Polling to keep the bot running
 # insert your Telegram bot token here
-bot = telebot.TeleBot('8051776188:AAEfH7tgGO5cM1v_jiY4jdWwgdJHtOGBavY')
+bot = telebot.TeleBot('6836807211:AAEbhtgTqYOkY-6ZMDGcMzfDXiC7gh8zsUI')
 
 # Admin user IDs
 admin_id = ["7209762563"]
@@ -189,6 +45,25 @@ def read_free_users():
 
 # List to store allowed user IDs
 allowed_user_ids = read_users()
+# Function to get CPU and Memory usage
+def get_system_usage():
+    cpu_usage = psutil.cpu_percent(interval=1)  # Get CPU usage
+    memory_info = psutil.virtual_memory()  # Get memory info
+    memory_usage = memory_info.percent  # Memory usage in percentage
+    return cpu_usage, memory_usage
+
+# Command handler for system status
+@bot.message_handler(commands=['systemstatus'])
+def system_status(message):
+    user_id = str(message.chat.id)
+    if user_id in admin_id:
+        cpu_usage, memory_usage = get_system_usage()
+        response = f"🔍 System Status:\n\n"
+        response += f"🖥️ CPU Usage: {cpu_usage}%\n"
+        response += f"🧠 Memory Usage: {memory_usage}%"
+    else:
+        response = "You do not have permission to view the system status."
+    bot.reply_to(message, response)
 
 # Function to log command to the file
 def log_command(user_id, target, port, time):
@@ -491,12 +366,13 @@ def show_command_logs(message):
 
 @bot.message_handler(commands=['help'])
 def show_help(message):
-    help_text ='''🤖 Available commands:
+    help_text = '''🤖 Available commands:
 💥 /bgmi : Method For Bgmi Servers. 
 💥 /rules : Please Check Before Use !!.
 💥 /mylogs : To Check Your Recents Attacks.
 💥 /plan : Checkout Our Botnet Rates.
 💥 /myinfo : TO Check Your WHOLE INFO.
+💥 /systemstatus : To Check System CPU and Memory Usage.  # New command
 
 🤖 To See Admin Commands:
 💥 /admincmd : Shows All Admin Commands.
