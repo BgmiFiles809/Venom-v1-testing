@@ -4,7 +4,7 @@ import telebot
 import subprocess
 import datetime
 import os
-import pshutil
+import psutil
 
 from keep_alive import keep_alive
 keep_alive()
