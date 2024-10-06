@@ -156,6 +156,22 @@ def add_user(message):
         response = "You have not purchased yet purchase now from:- @venomXcrazy."
 
     bot.reply_to(message, response)
+ #status
+ @bot.message_handler(commands=['status'])
+def show_status(message):
+    user_id = str(message.chat.id)
+    if user_id in allowed_user_ids:
+        try:
+            uptime = (datetime.datetime.now() - bot_start_time).seconds
+            with open(LOG_FILE, "r") as file:
+                logs = file.readlines()[-5:]  # Get last 5 logs
+            recent_logs = ''.join(logs)
+            response = f"✅ Bot is running.\n🕒 Uptime: {uptime} seconds\n📅 Recent Logs:\n{recent_logs}"
+        except Exception as e:
+            response = "Error fetching status."
+    else:
+        response = "Unauthorized access."
+    bot.reply_to(message, response)
 
 # Command handler for retrieving user info
 @bot.message_handler(commands=['myinfo'])
